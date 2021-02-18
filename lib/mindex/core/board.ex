@@ -1,6 +1,8 @@
 defmodule Mindex.Core.Board do
   defstruct answer: [], guesses: []
 
+  alias Mindex.Core.Score
+
   @spec new :: %Mindex.Core.Board{answer: list(), guesses: list()}
   def new, do: new(random_answer())
 
@@ -19,4 +21,27 @@ defmodule Mindex.Core.Board do
 
   @spec lost?(board :: %__MODULE__{}) :: boolean
   def lost?(board), do: !won?(board) and length(board.guesses) == 10
+
+  @spec to_string(%__MODULE__{}) :: list()
+  def to_string(board), do: board |> status() |> build_string()
+
+  defp status(%{answer: answer, guesses: guesses} = board) do
+    %{won: won?(board), lost: lost?(board), rows: rows(guesses, answer)}
+  end
+
+  defp rows(guesses, answer), do: Enum.map(guesses, &row(&1, answer))
+
+  defp row(guess, answer), do: %{guess: guess, score: Score.new(guess, answer)}
+
+  defp build_string(%{rows: rows}), do: Enum.map(rows, &print_row/1)
+
+  @spec print_guess(guess :: list()) :: String.t()
+  def print_guess([a, b, c, d]) do
+    IO.inspect("Guess: #{a}, #{b}, #{c}, #{d}")
+  end
+
+  defp print_row(%{guess: guess, score: score}) do
+    print_guess(guess)
+    Score.render_string(score)
+  end
 end
