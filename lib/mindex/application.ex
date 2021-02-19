@@ -5,11 +5,9 @@ defmodule Mindex.Application do
 
   use Application
 
-  alias Mindex.Boundary.Server
-
   def start(_type, _args) do
     children = [
-      {Server, :game_board}
+      {DynamicSupervisor, strategy: :one_for_one, name: MultiplayerServer}
     ]
 
     opts = [strategy: :one_for_one, name: Mindex.Supervisor]

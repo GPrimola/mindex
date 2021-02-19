@@ -2,17 +2,12 @@ defmodule Mindex do
   @moduledoc """
   Documentation for `Mindex`.
   """
+  alias Mindex.Boundary.Server, as: Game
 
-  @doc """
-  Hello world.
+  def add_game(name) when is_binary(name),
+    do: add_game(String.to_atom(name))
 
-  ## Examples
-
-      iex> Mindex.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def add_game(name) do
+    DynamicSupervisor.start_child(MultiplayerServer, {Game, name})
   end
 end
