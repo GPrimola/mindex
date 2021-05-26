@@ -4,7 +4,7 @@ defmodule Mindex.Core.Board do
   alias Mindex.Core.Score
 
   @spec new :: %Mindex.Core.Board{answer: list(), guesses: list()}
-  def new, do: %__MODULE__{answer: random_answer()}
+  def new, do: new(random_answer())
 
   @spec new(answer :: list()) :: %Mindex.Core.Board{answer: list(), guesses: list()}
   def new([_a, _b, _c, _d] = answer), do: %__MODULE__{answer: answer}
